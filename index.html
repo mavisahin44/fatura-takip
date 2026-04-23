@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fatura Takip</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F2EB;
+    --surface: #FDFBF7;
+    --border: #E2DDD4;
+    --text: #1A1714;
+    --text-muted: #7A756D;
+    --accent: #2C5F2E;
+    --accent-light: #EAF3DE;
+    --danger: #8B2E2E;
+    --danger-light: #FAF0F0;
+    --amber: #7A4F1A;
+    --amber-light: #FDF4E7;
+    --shadow: 0 2px 12px rgba(26,23,20,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  .topbar {
+    background: var(--text); color: #F5F2EB;
+    padding: 14px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .topbar-title { font-family: 'DM Serif Display', serif; font-size: 22px; letter-spacing: -0.3px; }
+  .topbar-right { display: flex; align-items: center; gap: 16px; }
+  .topbar-date { font-size: 13px; opacity: 0.6; font-weight: 300; }
+
+  .alarm-bell-btn {
+    position: relative; cursor: pointer;
+    width: 38px; height: 38px; border-radius: 50%;
+    border: 1px solid rgba(245,242,235,0.2);
+    background: none;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; transition: background 0.15s;
+  }
+  .alarm-bell-btn:hover { background: rgba(245,242,235,0.12); }
+  .alarm-bell-btn.ringing { animation: bellRing 0.4s ease-in-out infinite alternate; }
+  @keyframes bellRing {
+    from { transform: rotate(-14deg); }
+    to   { transform: rotate(14deg); }
+  }
+  .alarm-dot {
+    position: absolute; top: 2px; right: 2px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #E74C3C; border: 2px solid var(--text);
+    display: none;
+  }
+  .alarm-dot.show { display: block; }
+
+  /* ALARM BANNER */
+  .alarm-banner {
+    background: #7B1F1F; color: #FDECEA;
+    overflow: hidden; max-height: 0;
+    transition: max-height 0.35s ease, padding 0.25s ease;
+  }
+  .alarm-banner.open { max-height: 220px; padding: 16px 40px; }
+  .alarm-banner-inner { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+  .alarm-icon-big { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+  .alarm-text { flex: 1; }
+  .alarm-title { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
+  .alarm-items { list-style: none; display: flex; flex-direction: column; gap: 3px; }
+  .alarm-items li { font-size: 13px; opacity: 0.85; }
+  .btn-sus {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 500;
+    padding: 8px 18px;
+    background: rgba(255,255,255,0.12);
+    color: #FDECEA;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 8px; cursor: pointer;
+    white-space: nowrap; flex-shrink: 0;
+    transition: background 0.15s;
+    margin-top: 2px;
+  }
+  .btn-sus:hover { background: rgba(255,255,255,0.22); }
+
+  .main { max-width: 900px; margin: 0 auto; padding: 40px 24px; }
+
+  .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 32px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; transition: transform 0.15s; }
+  .stat-card:hover { transform: translateY(-2px); }
+  .stat-label { font-size: 11px; font-weight: 500; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; }
+  .stat-value { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--text); }
+  .stat-value.green { color: var(--accent); }
+  .stat-value.red { color: var(--danger); }
+  .stat-value.amber { color: var(--amber); }
+  .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  .form-section { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 28px; box-shadow: var(--shadow); }
+  .section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
+  .form-grid { display: grid; grid-template-columns: 2fr 1.2fr 1.2fr 1fr auto; gap: 10px; align-items: center; }
+  .form-group { display: flex; flex-direction: column; gap: 4px; }
+  .form-group label { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+  input, select {
+    font-family: 'DM Sans', sans-serif; font-size: 14px; padding: 10px 12px;
+    border: 1px solid var(--border); border-radius: 8px;
+    background: var(--bg); color: var(--text); outline: none;
+    transition: border-color 0.15s; width: 100%;
+  }
+  input:focus, select:focus { border-color: var(--text); }
+  .btn-ekle {
+    font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500;
+    padding: 10px 20px; background: var(--text); color: #F5F2EB;
+    border: none; border-radius: 8px; cursor: pointer; white-space: nowrap;
+    margin-top: 18px; transition: opacity 0.15s;
+  }
+  .btn-ekle:hover { opacity: 0.85; }
+
+  .list-section { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); }
+  .list-header { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; border-bottom: 1px solid var(--border); }
+  .list-header-title { font-size: 11px; font-weight: 500; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); }
+  .filters { display: flex; gap: 6px; }
+  .filter-btn {
+    font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 5px 12px;
+    border-radius: 20px; border: 1px solid var(--border);
+    background: transparent; color: var(--text-muted); cursor: pointer; transition: all 0.15s;
+  }
+  .filter-btn.active { background: var(--text); color: #F5F2EB; border-color: var(--text); }
+
+  .fatura-table { width: 100%; border-collapse: collapse; }
+  .fatura-table th {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase;
+    color: var(--text-muted); padding: 10px 20px; text-align: left;
+    border-bottom: 1px solid var(--border); background: var(--bg);
+  }
+  .fatura-table th:last-child { text-align: right; }
+  .fatura-row { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  .fatura-row:last-child { border-bottom: none; }
+  .fatura-row:hover { background: var(--bg); }
+  .fatura-row.odendi-row { opacity: 0.55; }
+  .fatura-row.gecikti-row { background: #FFF7F7; }
+  .fatura-table td { padding: 14px 20px; font-size: 14px; vertical-align: middle; }
+  .fatura-table td:last-child { text-align: right; }
+
+  .check-wrap {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 1.5px solid var(--border); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; flex-shrink: 0;
+  }
+  .check-wrap:hover { border-color: var(--accent); }
+  .check-wrap.checked { background: var(--accent); border-color: var(--accent); }
+  .check-wrap.checked::after {
+    content: ''; width: 7px; height: 5px;
+    border-left: 2px solid white; border-bottom: 2px solid white;
+    transform: rotate(-45deg) translateY(-1px); display: block;
+  }
+  .cell-check { display: flex; align-items: center; gap: 12px; }
+  .fatura-ad { font-weight: 500; font-size: 15px; }
+
+  .badge { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.3px; }
+  .badge.bekliyor { background: var(--amber-light); color: var(--amber); }
+  .badge.odendi { background: var(--accent-light); color: var(--accent); }
+  .badge.gecikti { background: var(--danger-light); color: var(--danger); }
+
+  .tutar-cell { font-family: 'DM Serif Display', serif; font-size: 17px; }
+  .actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
+
+  .btn-sil {
+    background: none; border: none; color: var(--text-muted);
+    cursor: pointer; font-size: 18px; line-height: 1;
+    padding: 4px 8px; border-radius: 6px; transition: all 0.15s;
+  }
+  .btn-sil:hover { background: var(--danger-light); color: var(--danger); }
+
+  .btn-alarm-row {
+    background: none; border: none; font-size: 15px; cursor: pointer;
+    padding: 4px 6px; border-radius: 6px; line-height: 1;
+    transition: all 0.15s; color: var(--danger);
+  }
+  .btn-alarm-row.shake { animation: rowShake 0.5s ease infinite; }
+  @keyframes rowShake {
+    0%,100% { transform: rotate(0); }
+    25%      { transform: rotate(-16deg); }
+    75%      { transform: rotate(16deg); }
+  }
+  .btn-alarm-row:hover { background: var(--danger-light); }
+
+  .empty-state { text-align: center; padding: 48px 24px; color: var(--text-muted); }
+  .empty-state p { font-size: 15px; }
+  .empty-state-icon { font-size: 32px; display: block; margin-bottom: 12px; opacity: 0.4; }
+
+  .progress-wrap { margin-top: 10px; }
+  .progress-bar { height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.4s ease; }
+  .progress-label { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+
+  @media (max-width: 700px) {
+    .stats { grid-template-columns: repeat(2,1fr); }
+    .form-grid { grid-template-columns: 1fr 1fr; }
+    .topbar { padding: 14px 20px; }
+    .main { padding: 24px 16px; }
+    .alarm-banner.open { padding: 14px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-title">Fatura Takip</div>
+  <div class="topbar-right">
+    <div class="topbar-date" id="tarih-label"></div>
+    <button class="alarm-bell-btn" id="alarm-btn" onclick="bellTikla()" title="Alarm">
+      🔔
+      <div class="alarm-dot" id="alarm-dot"></div>
+    </button>
+  </div>
+</div>
+
+<div class="alarm-banner" id="alarm-banner">
+  <div class="alarm-banner-inner">
+    <div class="alarm-icon-big">🚨</div>
+    <div class="alarm-text">
+      <div class="alarm-title" id="alarm-title">Gecikmiş fatura var!</div>
+      <ul class="alarm-items" id="alarm-items"></ul>
+    </div>
+    <button class="btn-sus" onclick="alarmSustur()">🔕 Sustur</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-label">Toplam</div>
+      <div class="stat-value" id="stat-toplam">₺0</div>
+      <div class="stat-sub" id="stat-adet">0 fatura</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Ödendi</div>
+      <div class="stat-value green" id="stat-odendi">₺0</div>
+      <div class="progress-wrap">
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+        <div class="progress-label" id="progress-label">%0 tamamlandı</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Bekliyor</div>
+      <div class="stat-value amber" id="stat-bekliyor">₺0</div>
+      <div class="stat-sub" id="stat-bek-adet">0 fatura</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Gecikmiş</div>
+      <div class="stat-value red" id="stat-gecikti">₺0</div>
+      <div class="stat-sub" id="stat-gec-adet">0 fatura</div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="section-label">Yeni Fatura Ekle</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Fatura Adı</label>
+        <input type="text" id="inp-ad" placeholder="ör: Elektrik faturası" />
+      </div>
+      <div class="form-group">
+        <label>Kategori</label>
+        <select id="inp-kategori">
+          <option value="Faturalar">Faturalar</option>
+          <option value="Kira">Kira</option>
+          <option value="Abonelik">Abonelik</option>
+          <option value="Sigorta">Sigorta</option>
+          <option value="Kredi">Kredi</option>
+          <option value="Diğer">Diğer</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tutar (₺)</label>
+        <input type="number" id="inp-tutar" placeholder="0.00" min="0" step="0.01" />
+      </div>
+      <div class="form-group">
+        <label>Son Ödeme</label>
+        <input type="date" id="inp-tarih" />
+      </div>
+      <button class="btn-ekle" onclick="faturaEkle()">+ Ekle</button>
+    </div>
+  </div>
+
+  <div class="list-section">
+    <div class="list-header">
+      <div class="list-header-title">Faturalar</div>
+      <div class="filters">
+        <button class="filter-btn active" onclick="filtrele('hepsi',this)">Hepsi</button>
+        <button class="filter-btn" onclick="filtrele('bekliyor',this)">Bekliyor</button>
+        <button class="filter-btn" onclick="filtrele('gecikti',this)">Gecikmiş</button>
+        <button class="filter-btn" onclick="filtrele('odendi',this)">Ödendi</button>
+      </div>
+    </div>
+    <table class="fatura-table">
+      <thead>
+        <tr>
+          <th style="width:38%">Fatura</th>
+          <th>Kategori</th>
+          <th>Son Ödeme</th>
+          <th>Durum</th>
+          <th>Tutar / İşlem</th>
+        </tr>
+      </thead>
+      <tbody id="fatura-tbody"></tbody>
+    </table>
+    <div class="empty-state" id="empty-state" style="display:none">
+      <span class="empty-state-icon">📄</span>
+      <p>Fatura bulunamadı.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const bugun = new Date(); bugun.setHours(0,0,0,0);
+document.getElementById('tarih-label').textContent = bugun.toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'});
+document.getElementById('inp-tarih').value = bugun.toISOString().split('T')[0];
+
+let faturalar = JSON.parse(localStorage.getItem('fatura-takip') || 'null') || [
+  {id:1,ad:'Elektrik',kategori:'Faturalar',tutar:485,tarih:'2026-04-20',odendi:false},
+  {id:2,ad:'Su faturası',kategori:'Faturalar',tutar:120,tarih:'2026-04-15',odendi:true},
+  {id:3,ad:'İnternet',kategori:'Abonelik',tutar:299,tarih:'2026-04-28',odendi:false},
+  {id:4,ad:'Doğalgaz',kategori:'Faturalar',tutar:650,tarih:'2026-04-08',odendi:false},
+  {id:5,ad:'Kira',kategori:'Kira',tutar:8500,tarih:'2026-04-05',odendi:true},
+  {id:6,ad:'Netflix',kategori:'Abonelik',tutar:89,tarih:'2026-04-22',odendi:true},
+];
+let nextId = Math.max(...faturalar.map(f=>f.id))+1;
+let aktifFiltre = 'hepsi';
+let susturuldu = false;
+let bannerAcik = false;
+let alarmTimer = null;
+let audioCtx = null;
+let ilkTiklamaBekleniyor = false;
+
+function kaydet() { localStorage.setItem('fatura-takip', JSON.stringify(faturalar)); }
+
+function durum(f) {
+  if (f.odendi) return 'odendi';
+  const s = new Date(f.tarih); s.setHours(0,0,0,0);
+  return s < bugun ? 'gecikti' : 'bekliyor';
+}
+function durumLabel(d) { return {odendi:'Ödendi',gecikti:'Gecikmiş',bekliyor:'Bekliyor'}[d]; }
+function fmt(t) { return '₺'+t.toLocaleString('tr-TR',{minimumFractionDigits:0,maximumFractionDigits:2}); }
+
+/* SES */
+function calSes() {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    [[880,0],[660,0.2],[880,0.4],[1100,0.6]].forEach(([freq,delay]) => {
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.connect(g); g.connect(audioCtx.destination);
+      o.type = 'sine'; o.frequency.value = freq;
+      const t = audioCtx.currentTime + delay;
+      g.gain.setValueAtTime(0,t);
+      g.gain.linearRampToValueAtTime(0.28, t+0.04);
+      g.gain.linearRampToValueAtTime(0, t+0.17);
+      o.start(t); o.stop(t+0.2);
+    });
+  } catch(e) {}
+}
+
+function gecikmisList() { return faturalar.filter(f => durum(f)==='gecikti'); }
+
+function alarmGuncelle() {
+  const liste = gecikmisList();
+  const btn = document.getElementById('alarm-btn');
+  const dot = document.getElementById('alarm-dot');
+  const banner = document.getElementById('alarm-banner');
+
+  if (liste.length > 0 && !susturuldu) {
+    btn.classList.add('ringing');
+    dot.classList.add('show');
+    document.getElementById('alarm-title').textContent = liste.length + ' adet gecikmiş fatura!';
+    document.getElementById('alarm-items').innerHTML = liste.map(f =>
+      `<li>• ${f.ad} — ${fmt(f.tutar)} (son: ${new Date(f.tarih).toLocaleDateString('tr-TR')})</li>`
+    ).join('');
+    if (!bannerAcik) { banner.classList.add('open'); bannerAcik = true; }
+    /* Ses için ilk kullanıcı tıklaması gerekiyor — bekle */
+    if (!alarmTimer && !ilkTiklamaBekleniyor) {
+      ilkTiklamaBekleniyor = true;
+    }
+  } else {
+    btn.classList.remove('ringing');
+    ilkTiklamaBekleniyor = false;
+    if (liste.length === 0) {
+      dot.classList.remove('show');
+      banner.classList.remove('open');
+      bannerAcik = false;
+      susturuldu = false;
+    }
+    clearInterval(alarmTimer); alarmTimer = null;
+  }
+}
+
+/* İlk kullanıcı etkileşiminde ses başlat */
+function ilkEtkilesim() {
+  if (ilkTiklamaBekleniyor && !susturuldu && gecikmisList().length > 0) {
+    ilkTiklamaBekleniyor = false;
+    calSes();
+    if (!alarmTimer) alarmTimer = setInterval(calSes, 4000);
+  }
+  document.removeEventListener('click', ilkEtkilesim);
+  document.removeEventListener('keydown', ilkEtkilesim);
+}
+document.addEventListener('click', ilkEtkilesim);
+document.addEventListener('keydown', ilkEtkilesim);
+
+function alarmSustur() {
+  susturuldu = true;
+  ilkTiklamaBekleniyor = false;
+  bannerAcik = false;
+  clearInterval(alarmTimer); alarmTimer = null;
+  document.getElementById('alarm-banner').classList.remove('open');
+  document.getElementById('alarm-btn').classList.remove('ringing');
+}
+
+function bellTikla() {
+  const liste = gecikmisList();
+  if (liste.length === 0) return;
+  const banner = document.getElementById('alarm-banner');
+  if (bannerAcik) {
+    banner.classList.remove('open'); bannerAcik = false;
+  } else {
+    susturuldu = false;
+    ilkTiklamaBekleniyor = false;
+    banner.classList.add('open'); bannerAcik = true;
+    calSes();
+    if (!alarmTimer) alarmTimer = setInterval(calSes, 4000);
+    document.getElementById('alarm-btn').classList.add('ringing');
+  }
+}
+
+function render() {
+  let goster = faturalar;
+  if (aktifFiltre !== 'hepsi') goster = faturalar.filter(f => durum(f) === aktifFiltre);
+
+  const tbody = document.getElementById('fatura-tbody');
+  const empty = document.getElementById('empty-state');
+
+  if (goster.length === 0) {
+    tbody.innerHTML = ''; empty.style.display = 'block';
+  } else {
+    empty.style.display = 'none';
+    tbody.innerHTML = goster.map(f => {
+      const d = durum(f);
+      const tarStr = new Date(f.tarih).toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'});
+      const bellBtn = d === 'gecikti'
+        ? `<button class="btn-alarm-row ${susturuldu ? '' : 'shake'}" onclick="rowAlarmSus(event)" title="Alarmı sustur">🔔</button>`
+        : '';
+      return `<tr class="fatura-row ${f.odendi?'odendi-row':''} ${d==='gecikti'?'gecikti-row':''}">
+        <td><div class="cell-check">
+          <div class="check-wrap ${f.odendi?'checked':''}" onclick="toggle(${f.id})"></div>
+          <div><div class="fatura-ad">${f.ad}</div></div>
+        </div></td>
+        <td><span style="font-size:13px;color:var(--text-muted)">${f.kategori}</span></td>
+        <td><span style="font-size:13px">${tarStr}</span></td>
+        <td><span class="badge ${d}">${durumLabel(d)}</span></td>
+        <td><div class="actions">
+          <span class="tutar-cell">${fmt(f.tutar)}</span>
+          ${bellBtn}
+          <button class="btn-sil" onclick="sil(${f.id})">×</button>
+        </div></td>
+      </tr>`;
+    }).join('');
+  }
+
+  const toplam = faturalar.reduce((s,f)=>s+f.tutar,0);
+  const oList  = faturalar.filter(f=>f.odendi);
+  const oTut   = oList.reduce((s,f)=>s+f.tutar,0);
+  const bList  = faturalar.filter(f=>durum(f)==='bekliyor');
+  const bTut   = bList.reduce((s,f)=>s+f.tutar,0);
+  const gList  = gecikmisList();
+  const gTut   = gList.reduce((s,f)=>s+f.tutar,0);
+  const pct    = toplam>0 ? Math.round(oTut/toplam*100) : 0;
+
+  document.getElementById('stat-toplam').textContent = fmt(toplam);
+  document.getElementById('stat-adet').textContent   = faturalar.length+' fatura';
+  document.getElementById('stat-odendi').textContent = fmt(oTut);
+  document.getElementById('stat-bekliyor').textContent = fmt(bTut);
+  document.getElementById('stat-bek-adet').textContent = bList.length+' fatura';
+  document.getElementById('stat-gecikti').textContent  = fmt(gTut);
+  document.getElementById('stat-gec-adet').textContent = gList.length+' fatura';
+  document.getElementById('progress-fill').style.width = pct+'%';
+  document.getElementById('progress-label').textContent = '%'+pct+' tamamlandı';
+
+  alarmGuncelle();
+}
+
+function rowAlarmSus(e) { e.stopPropagation(); alarmSustur(); }
+
+function toggle(id) {
+  const f = faturalar.find(x=>x.id===id);
+  if (f) { f.odendi = !f.odendi; kaydet(); render(); }
+}
+function sil(id) {
+  if (!confirm('Bu fatura silinsin mi?')) return;
+  faturalar = faturalar.filter(x=>x.id!==id); kaydet(); render();
+}
+function faturaEkle() {
+  const ad = document.getElementById('inp-ad').value.trim();
+  const kat = document.getElementById('inp-kategori').value;
+  const tut = parseFloat(document.getElementById('inp-tutar').value);
+  const tar = document.getElementById('inp-tarih').value;
+  if (!ad||!tut||tut<=0||!tar) { alert('Lütfen tüm alanları doldurun.'); return; }
+  faturalar.push({id:nextId++,ad,kategori:kat,tutar:tut,tarih:tar,odendi:false});
+  document.getElementById('inp-ad').value = '';
+  document.getElementById('inp-tutar').value = '';
+  kaydet(); render();
+}
+function filtrele(f, el) {
+  aktifFiltre = f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active'); render();
+}
+
+render();
+</script>
+</body>
+</html>
