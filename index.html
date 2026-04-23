@@ -7,59 +7,30 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #F5F2EB;
-    --surface: #FDFBF7;
-    --border: #E2DDD4;
-    --text: #1A1714;
-    --text-muted: #7A756D;
-    --accent: #2C5F2E;
-    --accent-light: #EAF3DE;
-    --danger: #8B2E2E;
-    --danger-light: #FAF0F0;
-    --amber: #7A4F1A;
-    --amber-light: #FDF4E7;
+    --bg: #F5F2EB; --surface: #FDFBF7; --border: #E2DDD4;
+    --text: #1A1714; --text-muted: #7A756D;
+    --accent: #2C5F2E; --accent-light: #EAF3DE;
+    --danger: #8B2E2E; --danger-light: #FAF0F0;
+    --amber: #7A4F1A; --amber-light: #FDF4E7;
     --shadow: 0 2px 12px rgba(26,23,20,0.08);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  .topbar {
-    background: var(--text); color: #F5F2EB;
-    padding: 14px 40px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
+  /* TOPBAR */
+  .topbar { background: var(--text); color: #F5F2EB; padding: 14px 40px; display: flex; align-items: center; justify-content: space-between; }
   .topbar-title { font-family: 'DM Serif Display', serif; font-size: 22px; letter-spacing: -0.3px; }
   .topbar-right { display: flex; align-items: center; gap: 16px; }
   .topbar-date { font-size: 13px; opacity: 0.6; font-weight: 300; }
-
-  .alarm-bell-btn {
-    position: relative; cursor: pointer;
-    width: 38px; height: 38px; border-radius: 50%;
-    border: 1px solid rgba(245,242,235,0.2);
-    background: none;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; transition: background 0.15s;
-  }
+  .alarm-bell-btn { position: relative; cursor: pointer; width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(245,242,235,0.2); background: none; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: background 0.15s; }
   .alarm-bell-btn:hover { background: rgba(245,242,235,0.12); }
   .alarm-bell-btn.ringing { animation: bellRing 0.4s ease-in-out infinite alternate; }
-  @keyframes bellRing {
-    from { transform: rotate(-14deg); }
-    to   { transform: rotate(14deg); }
-  }
-  .alarm-dot {
-    position: absolute; top: 2px; right: 2px;
-    width: 10px; height: 10px; border-radius: 50%;
-    background: #E74C3C; border: 2px solid var(--text);
-    display: none;
-  }
+  @keyframes bellRing { from { transform: rotate(-14deg); } to { transform: rotate(14deg); } }
+  .alarm-dot { position: absolute; top: 2px; right: 2px; width: 10px; height: 10px; border-radius: 50%; background: #E74C3C; border: 2px solid var(--text); display: none; }
   .alarm-dot.show { display: block; }
 
   /* ALARM BANNER */
-  .alarm-banner {
-    background: #7B1F1F; color: #FDECEA;
-    overflow: hidden; max-height: 0;
-    transition: max-height 0.35s ease, padding 0.25s ease;
-  }
+  .alarm-banner { background: #7B1F1F; color: #FDECEA; overflow: hidden; max-height: 0; transition: max-height 0.35s ease, padding 0.25s ease; }
   .alarm-banner.open { max-height: 220px; padding: 16px 40px; }
   .alarm-banner-inner { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
   .alarm-icon-big { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
@@ -67,22 +38,20 @@
   .alarm-title { font-size: 15px; font-weight: 500; margin-bottom: 6px; }
   .alarm-items { list-style: none; display: flex; flex-direction: column; gap: 3px; }
   .alarm-items li { font-size: 13px; opacity: 0.85; }
-  .btn-sus {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px; font-weight: 500;
-    padding: 8px 18px;
-    background: rgba(255,255,255,0.12);
-    color: #FDECEA;
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 8px; cursor: pointer;
-    white-space: nowrap; flex-shrink: 0;
-    transition: background 0.15s;
-    margin-top: 2px;
-  }
+  .btn-sus { font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; padding: 8px 18px; background: rgba(255,255,255,0.12); color: #FDECEA; border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; cursor: pointer; white-space: nowrap; flex-shrink: 0; transition: background 0.15s; margin-top: 2px; }
   .btn-sus:hover { background: rgba(255,255,255,0.22); }
 
-  .main { max-width: 900px; margin: 0 auto; padding: 40px 24px; }
+  /* TABS */
+  .tab-bar { max-width: 900px; margin: 0 auto; padding: 28px 24px 0; display: flex; gap: 4px; }
+  .tab-btn { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; padding: 10px 20px; border-radius: 10px 10px 0 0; border: 1px solid transparent; background: transparent; color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
+  .tab-btn.active { background: var(--surface); border-color: var(--border); border-bottom-color: var(--surface); color: var(--text); }
+  .tab-btn:not(.active):hover { color: var(--text); }
 
+  .main { max-width: 900px; margin: 0 auto; padding: 0 24px 40px; }
+  .tab-content { display: none; padding-top: 28px; }
+  .tab-content.active { display: block; }
+
+  /* STATS */
   .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 32px; }
   .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; transition: transform 0.15s; }
   .stat-card:hover { transform: translateY(-2px); }
@@ -92,44 +61,33 @@
   .stat-value.red { color: var(--danger); }
   .stat-value.amber { color: var(--amber); }
   .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+  .progress-wrap { margin-top: 10px; }
+  .progress-bar { height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.4s ease; }
+  .progress-label { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
 
+  /* FORM */
   .form-section { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 28px; box-shadow: var(--shadow); }
   .section-label { font-size: 11px; font-weight: 500; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 16px; }
   .form-grid { display: grid; grid-template-columns: 2fr 1.2fr 1.2fr 1fr auto; gap: 10px; align-items: center; }
   .form-group { display: flex; flex-direction: column; gap: 4px; }
   .form-group label { font-size: 11px; color: var(--text-muted); font-weight: 500; }
-  input, select {
-    font-family: 'DM Sans', sans-serif; font-size: 14px; padding: 10px 12px;
-    border: 1px solid var(--border); border-radius: 8px;
-    background: var(--bg); color: var(--text); outline: none;
-    transition: border-color 0.15s; width: 100%;
-  }
+  input, select { font-family: 'DM Sans', sans-serif; font-size: 14px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); outline: none; transition: border-color 0.15s; width: 100%; }
   input:focus, select:focus { border-color: var(--text); }
-  .btn-ekle {
-    font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500;
-    padding: 10px 20px; background: var(--text); color: #F5F2EB;
-    border: none; border-radius: 8px; cursor: pointer; white-space: nowrap;
-    margin-top: 18px; transition: opacity 0.15s;
-  }
+  .btn-ekle { font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; padding: 10px 20px; background: var(--text); color: #F5F2EB; border: none; border-radius: 8px; cursor: pointer; white-space: nowrap; margin-top: 18px; transition: opacity 0.15s; }
   .btn-ekle:hover { opacity: 0.85; }
 
+  /* LIST */
   .list-section { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); }
   .list-header { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; border-bottom: 1px solid var(--border); }
   .list-header-title { font-size: 11px; font-weight: 500; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); }
   .filters { display: flex; gap: 6px; }
-  .filter-btn {
-    font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 5px 12px;
-    border-radius: 20px; border: 1px solid var(--border);
-    background: transparent; color: var(--text-muted); cursor: pointer; transition: all 0.15s;
-  }
+  .filter-btn { font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
   .filter-btn.active { background: var(--text); color: #F5F2EB; border-color: var(--text); }
 
+  /* TABLE */
   .fatura-table { width: 100%; border-collapse: collapse; }
-  .fatura-table th {
-    font-size: 11px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase;
-    color: var(--text-muted); padding: 10px 20px; text-align: left;
-    border-bottom: 1px solid var(--border); background: var(--bg);
-  }
+  .fatura-table th { font-size: 11px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-muted); padding: 10px 20px; text-align: left; border-bottom: 1px solid var(--border); background: var(--bg); }
   .fatura-table th:last-child { text-align: right; }
   .fatura-row { border-bottom: 1px solid var(--border); transition: background 0.1s; }
   .fatura-row:last-child { border-bottom: none; }
@@ -139,19 +97,10 @@
   .fatura-table td { padding: 14px 20px; font-size: 14px; vertical-align: middle; }
   .fatura-table td:last-child { text-align: right; }
 
-  .check-wrap {
-    width: 22px; height: 22px; border-radius: 50%;
-    border: 1.5px solid var(--border); cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.2s; flex-shrink: 0;
-  }
+  .check-wrap { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--border); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; flex-shrink: 0; }
   .check-wrap:hover { border-color: var(--accent); }
   .check-wrap.checked { background: var(--accent); border-color: var(--accent); }
-  .check-wrap.checked::after {
-    content: ''; width: 7px; height: 5px;
-    border-left: 2px solid white; border-bottom: 2px solid white;
-    transform: rotate(-45deg) translateY(-1px); display: block;
-  }
+  .check-wrap.checked::after { content: ''; width: 7px; height: 5px; border-left: 2px solid white; border-bottom: 2px solid white; transform: rotate(-45deg) translateY(-1px); display: block; }
   .cell-check { display: flex; align-items: center; gap: 12px; }
   .fatura-ad { font-weight: 500; font-size: 15px; }
 
@@ -160,44 +109,58 @@
   .badge.odendi { background: var(--accent-light); color: var(--accent); }
   .badge.gecikti { background: var(--danger-light); color: var(--danger); }
 
-  .tutar-cell { font-family: 'DM Serif Display', serif; font-size: 17px; }
+  /* TUTAR EDIT */
+  .tutar-cell { font-family: 'DM Serif Display', serif; font-size: 17px; cursor: pointer; border-bottom: 1px dashed var(--border); transition: border-color 0.15s; }
+  .tutar-cell:hover { border-bottom-color: var(--text); }
+  .tutar-edit-wrap { display: flex; align-items: center; gap: 6px; }
+  .tutar-input { font-family: 'DM Serif Display', serif; font-size: 15px; width: 100px; padding: 4px 8px; border: 1px solid var(--text); border-radius: 6px; background: var(--surface); text-align: right; }
+  .btn-tutar-kaydet { font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 4px 10px; background: var(--text); color: #F5F2EB; border: none; border-radius: 6px; cursor: pointer; }
+  .btn-tutar-iptal { font-family: 'DM Sans', sans-serif; font-size: 12px; padding: 4px 8px; background: none; border: 1px solid var(--border); border-radius: 6px; cursor: pointer; color: var(--text-muted); }
+
   .actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
-
-  .btn-sil {
-    background: none; border: none; color: var(--text-muted);
-    cursor: pointer; font-size: 18px; line-height: 1;
-    padding: 4px 8px; border-radius: 6px; transition: all 0.15s;
-  }
+  .btn-sil { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px; line-height: 1; padding: 4px 8px; border-radius: 6px; transition: all 0.15s; }
   .btn-sil:hover { background: var(--danger-light); color: var(--danger); }
-
-  .btn-alarm-row {
-    background: none; border: none; font-size: 15px; cursor: pointer;
-    padding: 4px 6px; border-radius: 6px; line-height: 1;
-    transition: all 0.15s; color: var(--danger);
-  }
+  .btn-alarm-row { background: none; border: none; font-size: 15px; cursor: pointer; padding: 4px 6px; border-radius: 6px; line-height: 1; transition: all 0.15s; color: var(--danger); }
   .btn-alarm-row.shake { animation: rowShake 0.5s ease infinite; }
-  @keyframes rowShake {
-    0%,100% { transform: rotate(0); }
-    25%      { transform: rotate(-16deg); }
-    75%      { transform: rotate(16deg); }
-  }
+  @keyframes rowShake { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-16deg); } 75% { transform: rotate(16deg); } }
   .btn-alarm-row:hover { background: var(--danger-light); }
+  .btn-duzenle { background: none; border: none; font-size: 13px; cursor: pointer; padding: 4px 6px; border-radius: 6px; line-height: 1; transition: all 0.15s; color: var(--text-muted); }
+  .btn-duzenle:hover { background: var(--bg); color: var(--text); }
 
+  /* EMPTY */
   .empty-state { text-align: center; padding: 48px 24px; color: var(--text-muted); }
   .empty-state p { font-size: 15px; }
-  .empty-state-icon { font-size: 32px; display: block; margin-bottom: 12px; opacity: 0.4; }
+  .empty-icon { font-size: 32px; display: block; margin-bottom: 12px; opacity: 0.4; }
 
-  .progress-wrap { margin-top: 10px; }
-  .progress-bar { height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.4s ease; }
-  .progress-label { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+  /* ── ABONE NUMARALARI ── */
+  .abone-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-top: 4px; }
+  .abone-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; box-shadow: var(--shadow); position: relative; }
+  .abone-kat { font-size: 10px; font-weight: 500; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+  .abone-sirket { font-size: 16px; font-weight: 500; margin-bottom: 10px; }
+  .abone-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+  .abone-key { font-size: 12px; color: var(--text-muted); }
+  .abone-val { font-size: 13px; font-weight: 500; font-family: 'DM Mono', monospace; letter-spacing: 0.5px; }
+  .abone-not { font-size: 12px; color: var(--text-muted); margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+  .abone-actions { position: absolute; top: 14px; right: 14px; display: flex; gap: 4px; }
+  .btn-abone-sil { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; padding: 3px 6px; border-radius: 5px; transition: all 0.15s; line-height: 1; }
+  .btn-abone-sil:hover { background: var(--danger-light); color: var(--danger); }
+  .btn-abone-duzenle { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 14px; padding: 3px 6px; border-radius: 5px; transition: all 0.15s; line-height: 1; }
+  .btn-abone-duzenle:hover { background: var(--bg); color: var(--text); }
+
+  .abone-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .abone-form-grid .full { grid-column: 1 / -1; }
+  .abone-form-grid .form-group { display: flex; flex-direction: column; gap: 4px; }
+  .abone-form-grid label { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+  .abone-form-actions { display: flex; gap: 8px; margin-top: 4px; }
 
   @media (max-width: 700px) {
     .stats { grid-template-columns: repeat(2,1fr); }
     .form-grid { grid-template-columns: 1fr 1fr; }
     .topbar { padding: 14px 20px; }
-    .main { padding: 24px 16px; }
+    .tab-bar { padding: 20px 16px 0; }
+    .main { padding: 0 16px 32px; }
     .alarm-banner.open { padding: 14px 20px; }
+    .abone-form-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -225,89 +188,161 @@
   </div>
 </div>
 
+<!-- SEKMELER -->
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="sekmeAc('faturalar', this)">📋 Faturalar</button>
+  <button class="tab-btn" onclick="sekmeAc('abone', this)">🔑 Abone Numaraları</button>
+</div>
+
 <div class="main">
-  <div class="stats">
-    <div class="stat-card">
-      <div class="stat-label">Toplam</div>
-      <div class="stat-value" id="stat-toplam">₺0</div>
-      <div class="stat-sub" id="stat-adet">0 fatura</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Ödendi</div>
-      <div class="stat-value green" id="stat-odendi">₺0</div>
-      <div class="progress-wrap">
-        <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
-        <div class="progress-label" id="progress-label">%0 tamamlandı</div>
+
+  <!-- FATURALAR SEKMESİ -->
+  <div class="tab-content active" id="tab-faturalar">
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-label">Toplam</div>
+        <div class="stat-value" id="stat-toplam">₺0</div>
+        <div class="stat-sub" id="stat-adet">0 fatura</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Ödendi</div>
+        <div class="stat-value green" id="stat-odendi">₺0</div>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+          <div class="progress-label" id="progress-label">%0 tamamlandı</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Bekliyor</div>
+        <div class="stat-value amber" id="stat-bekliyor">₺0</div>
+        <div class="stat-sub" id="stat-bek-adet">0 fatura</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Gecikmiş</div>
+        <div class="stat-value red" id="stat-gecikti">₺0</div>
+        <div class="stat-sub" id="stat-gec-adet">0 fatura</div>
       </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">Bekliyor</div>
-      <div class="stat-value amber" id="stat-bekliyor">₺0</div>
-      <div class="stat-sub" id="stat-bek-adet">0 fatura</div>
+
+    <div class="form-section">
+      <div class="section-label">Yeni Fatura Ekle</div>
+      <div class="form-grid" style="grid-template-columns:2fr 1fr 1fr 1fr 1fr auto">
+        <div class="form-group">
+          <label>Fatura Adı</label>
+          <input type="text" id="inp-ad" placeholder="ör: Elektrik faturası" />
+        </div>
+        <div class="form-group">
+          <label>Kategori</label>
+          <select id="inp-kategori">
+            <option value="Faturalar">Faturalar</option>
+            <option value="Kira">Kira</option>
+            <option value="Abonelik">Abonelik</option>
+            <option value="Sigorta">Sigorta</option>
+            <option value="Kredi">Kredi</option>
+            <option value="Diğer">Diğer</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Abone No (opsiyonel)</label>
+          <input type="text" id="inp-abone-no" placeholder="ör: 1234567890" />
+        </div>
+        <div class="form-group">
+          <label>Tutar (₺)</label>
+          <input type="number" id="inp-tutar" placeholder="0.00" min="0" step="0.01" />
+        </div>
+        <div class="form-group">
+          <label>Son Ödeme</label>
+          <input type="date" id="inp-tarih" />
+        </div>
+        <button class="btn-ekle" onclick="faturaEkle()">+ Ekle</button>
+      </div>
     </div>
-    <div class="stat-card">
-      <div class="stat-label">Gecikmiş</div>
-      <div class="stat-value red" id="stat-gecikti">₺0</div>
-      <div class="stat-sub" id="stat-gec-adet">0 fatura</div>
+
+    <div class="list-section">
+      <div class="list-header">
+        <div class="list-header-title">Faturalar</div>
+        <div class="filters">
+          <button class="filter-btn active" onclick="filtrele('hepsi',this)">Hepsi</button>
+          <button class="filter-btn" onclick="filtrele('bekliyor',this)">Bekliyor</button>
+          <button class="filter-btn" onclick="filtrele('gecikti',this)">Gecikmiş</button>
+          <button class="filter-btn" onclick="filtrele('odendi',this)">Ödendi</button>
+        </div>
+      </div>
+      <table class="fatura-table">
+        <thead>
+          <tr>
+            <th style="width:30%">Fatura</th>
+            <th>Kategori</th>
+            <th>Abone No</th>
+            <th>Son Ödeme</th>
+            <th>Durum</th>
+            <th>Tutar / İşlem</th>
+          </tr>
+        </thead>
+        <tbody id="fatura-tbody"></tbody>
+      </table>
+      <div class="empty-state" id="empty-state" style="display:none">
+        <span class="empty-icon">📄</span>
+        <p>Fatura bulunamadı.</p>
+      </div>
     </div>
   </div>
 
-  <div class="form-section">
-    <div class="section-label">Yeni Fatura Ekle</div>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Fatura Adı</label>
-        <input type="text" id="inp-ad" placeholder="ör: Elektrik faturası" />
-      </div>
-      <div class="form-group">
-        <label>Kategori</label>
-        <select id="inp-kategori">
-          <option value="Faturalar">Faturalar</option>
-          <option value="Kira">Kira</option>
-          <option value="Abonelik">Abonelik</option>
-          <option value="Sigorta">Sigorta</option>
-          <option value="Kredi">Kredi</option>
-          <option value="Diğer">Diğer</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Tutar (₺)</label>
-        <input type="number" id="inp-tutar" placeholder="0.00" min="0" step="0.01" />
-      </div>
-      <div class="form-group">
-        <label>Son Ödeme</label>
-        <input type="date" id="inp-tarih" />
-      </div>
-      <button class="btn-ekle" onclick="faturaEkle()">+ Ekle</button>
-    </div>
-  </div>
+  <!-- ABONE NUMARALARI SEKMESİ -->
+  <div class="tab-content" id="tab-abone">
 
-  <div class="list-section">
-    <div class="list-header">
-      <div class="list-header-title">Faturalar</div>
-      <div class="filters">
-        <button class="filter-btn active" onclick="filtrele('hepsi',this)">Hepsi</button>
-        <button class="filter-btn" onclick="filtrele('bekliyor',this)">Bekliyor</button>
-        <button class="filter-btn" onclick="filtrele('gecikti',this)">Gecikmiş</button>
-        <button class="filter-btn" onclick="filtrele('odendi',this)">Ödendi</button>
+    <div class="form-section">
+      <div class="section-label" id="abone-form-baslik">Yeni Abone Numarası Ekle</div>
+      <div class="abone-form-grid">
+        <div class="form-group">
+          <label>Şirket / Kurum Adı</label>
+          <input type="text" id="ab-sirket" placeholder="ör: EDAŞ, İGDAŞ, Turkcell" />
+        </div>
+        <div class="form-group">
+          <label>Kategori</label>
+          <select id="ab-kat">
+            <option value="Elektrik">Elektrik</option>
+            <option value="Doğalgaz">Doğalgaz</option>
+            <option value="Su">Su</option>
+            <option value="İnternet">İnternet</option>
+            <option value="Telefon">Telefon</option>
+            <option value="Sigorta">Sigorta</option>
+            <option value="Diğer">Diğer</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Abone Numarası</label>
+          <input type="text" id="ab-no" placeholder="ör: 1234567890" />
+        </div>
+        <div class="form-group">
+          <label>Müşteri No (opsiyonel)</label>
+          <input type="text" id="ab-musteri" placeholder="ör: 9876543" />
+        </div>
+        <div class="form-group">
+          <label>Sayaç No (opsiyonel)</label>
+          <input type="text" id="ab-sayac" placeholder="ör: 00123456" />
+        </div>
+        <div class="form-group">
+          <label>Telefon / Destek (opsiyonel)</label>
+          <input type="text" id="ab-tel" placeholder="ör: 0850 xxx xx xx" />
+        </div>
+        <div class="form-group full">
+          <label>Not (opsiyonel)</label>
+          <input type="text" id="ab-not" placeholder="ör: Ana hat, Ev adresi için" />
+        </div>
+      </div>
+      <div class="abone-form-actions" style="margin-top:14px">
+        <button class="btn-ekle" style="margin-top:0" onclick="aboneEkle()">+ Ekle</button>
+        <button class="btn-ekle" id="ab-iptal-btn" style="margin-top:0;background:var(--bg);color:var(--text);border:1px solid var(--border);display:none" onclick="aboneIptal()">İptal</button>
       </div>
     </div>
-    <table class="fatura-table">
-      <thead>
-        <tr>
-          <th style="width:38%">Fatura</th>
-          <th>Kategori</th>
-          <th>Son Ödeme</th>
-          <th>Durum</th>
-          <th>Tutar / İşlem</th>
-        </tr>
-      </thead>
-      <tbody id="fatura-tbody"></tbody>
-    </table>
-    <div class="empty-state" id="empty-state" style="display:none">
-      <span class="empty-state-icon">📄</span>
-      <p>Fatura bulunamadı.</p>
+
+    <div class="abone-grid" id="abone-grid"></div>
+    <div class="empty-state" id="abone-empty" style="display:none">
+      <span class="empty-icon">🔑</span>
+      <p>Henüz abone numarası eklenmedi.</p>
     </div>
+
   </div>
 </div>
 
@@ -316,6 +351,7 @@ const bugun = new Date(); bugun.setHours(0,0,0,0);
 document.getElementById('tarih-label').textContent = bugun.toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'});
 document.getElementById('inp-tarih').value = bugun.toISOString().split('T')[0];
 
+/* ── VERİ ── */
 let faturalar = JSON.parse(localStorage.getItem('fatura-takip') || 'null') || [
   {id:1,ad:'Elektrik',kategori:'Faturalar',tutar:485,tarih:'2026-04-20',odendi:false},
   {id:2,ad:'Su faturası',kategori:'Faturalar',tutar:120,tarih:'2026-04-15',odendi:true},
@@ -325,14 +361,22 @@ let faturalar = JSON.parse(localStorage.getItem('fatura-takip') || 'null') || [
   {id:6,ad:'Netflix',kategori:'Abonelik',tutar:89,tarih:'2026-04-22',odendi:true},
 ];
 let nextId = Math.max(...faturalar.map(f=>f.id))+1;
+
+let aboneler = JSON.parse(localStorage.getItem('abone-takip') || '[]');
+let aboneNextId = aboneler.length ? Math.max(...aboneler.map(a=>a.id))+1 : 1;
+let aboneDuzenleId = null;
+
 let aktifFiltre = 'hepsi';
-let susturuldu = false;
-let bannerAcik = false;
-let alarmTimer = null;
-let audioCtx = null;
-let ilkTiklamaBekleniyor = false;
+let susturuldu = false, bannerAcik = false, alarmTimer = null, audioCtx = null, ilkTiklamaBekleniyor = false;
+let tutarDuzenleId = null;
+let aboneDuzenleId2 = null;
+
+function aboneNoDuzenle(id) { aboneDuzenleId2=id; render(); setTimeout(()=>{ const el=document.getElementById('abone-inp-'+id); if(el){el.focus();el.select();} },50); }
+function aboneNoKaydet(id) { const el=document.getElementById('abone-inp-'+id); const f=faturalar.find(x=>x.id===id); if(f){f.aboneNo=el?el.value.trim():'';kaydet();} aboneDuzenleId2=null; render(); }
+function aboneNoIptal() { aboneDuzenleId2=null; render(); }
 
 function kaydet() { localStorage.setItem('fatura-takip', JSON.stringify(faturalar)); }
+function aboneKaydet() { localStorage.setItem('abone-takip', JSON.stringify(aboneler)); }
 
 function durum(f) {
   if (f.odendi) return 'odendi';
@@ -342,63 +386,45 @@ function durum(f) {
 function durumLabel(d) { return {odendi:'Ödendi',gecikti:'Gecikmiş',bekliyor:'Bekliyor'}[d]; }
 function fmt(t) { return '₺'+t.toLocaleString('tr-TR',{minimumFractionDigits:0,maximumFractionDigits:2}); }
 
-/* SES */
+/* ── ALARM SES ── */
 function calSes() {
   try {
     if (!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
     [[880,0],[660,0.2],[880,0.4],[1100,0.6]].forEach(([freq,delay]) => {
-      const o = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
+      const o=audioCtx.createOscillator(), g=audioCtx.createGain();
       o.connect(g); g.connect(audioCtx.destination);
-      o.type = 'sine'; o.frequency.value = freq;
-      const t = audioCtx.currentTime + delay;
+      o.type='sine'; o.frequency.value=freq;
+      const t=audioCtx.currentTime+delay;
       g.gain.setValueAtTime(0,t);
-      g.gain.linearRampToValueAtTime(0.28, t+0.04);
-      g.gain.linearRampToValueAtTime(0, t+0.17);
+      g.gain.linearRampToValueAtTime(0.28,t+0.04);
+      g.gain.linearRampToValueAtTime(0,t+0.17);
       o.start(t); o.stop(t+0.2);
     });
   } catch(e) {}
 }
 
-function gecikmisList() { return faturalar.filter(f => durum(f)==='gecikti'); }
+function gecikmisList() { return faturalar.filter(f=>durum(f)==='gecikti'); }
 
 function alarmGuncelle() {
   const liste = gecikmisList();
-  const btn = document.getElementById('alarm-btn');
-  const dot = document.getElementById('alarm-dot');
-  const banner = document.getElementById('alarm-banner');
-
+  const btn=document.getElementById('alarm-btn'), dot=document.getElementById('alarm-dot'), banner=document.getElementById('alarm-banner');
   if (liste.length > 0 && !susturuldu) {
-    btn.classList.add('ringing');
-    dot.classList.add('show');
-    document.getElementById('alarm-title').textContent = liste.length + ' adet gecikmiş fatura!';
-    document.getElementById('alarm-items').innerHTML = liste.map(f =>
-      `<li>• ${f.ad} — ${fmt(f.tutar)} (son: ${new Date(f.tarih).toLocaleDateString('tr-TR')})</li>`
-    ).join('');
-    if (!bannerAcik) { banner.classList.add('open'); bannerAcik = true; }
-    /* Ses için ilk kullanıcı tıklaması gerekiyor — bekle */
-    if (!alarmTimer && !ilkTiklamaBekleniyor) {
-      ilkTiklamaBekleniyor = true;
-    }
+    btn.classList.add('ringing'); dot.classList.add('show');
+    document.getElementById('alarm-title').textContent = liste.length+' adet gecikmiş fatura!';
+    document.getElementById('alarm-items').innerHTML = liste.map(f=>`<li>• ${f.ad} — ${fmt(f.tutar)} (son: ${new Date(f.tarih).toLocaleDateString('tr-TR')})</li>`).join('');
+    if (!bannerAcik) { banner.classList.add('open'); bannerAcik=true; }
+    if (!alarmTimer && !ilkTiklamaBekleniyor) ilkTiklamaBekleniyor=true;
   } else {
-    btn.classList.remove('ringing');
-    ilkTiklamaBekleniyor = false;
-    if (liste.length === 0) {
-      dot.classList.remove('show');
-      banner.classList.remove('open');
-      bannerAcik = false;
-      susturuldu = false;
-    }
-    clearInterval(alarmTimer); alarmTimer = null;
+    btn.classList.remove('ringing'); ilkTiklamaBekleniyor=false;
+    if (liste.length===0) { dot.classList.remove('show'); banner.classList.remove('open'); bannerAcik=false; susturuldu=false; }
+    clearInterval(alarmTimer); alarmTimer=null;
   }
 }
 
-/* İlk kullanıcı etkileşiminde ses başlat */
 function ilkEtkilesim() {
-  if (ilkTiklamaBekleniyor && !susturuldu && gecikmisList().length > 0) {
-    ilkTiklamaBekleniyor = false;
-    calSes();
-    if (!alarmTimer) alarmTimer = setInterval(calSes, 4000);
+  if (ilkTiklamaBekleniyor && !susturuldu && gecikmisList().length>0) {
+    ilkTiklamaBekleniyor=false; calSes();
+    if (!alarmTimer) alarmTimer=setInterval(calSes,4000);
   }
   document.removeEventListener('click', ilkEtkilesim);
   document.removeEventListener('keydown', ilkEtkilesim);
@@ -407,111 +433,204 @@ document.addEventListener('click', ilkEtkilesim);
 document.addEventListener('keydown', ilkEtkilesim);
 
 function alarmSustur() {
-  susturuldu = true;
-  ilkTiklamaBekleniyor = false;
-  bannerAcik = false;
-  clearInterval(alarmTimer); alarmTimer = null;
+  susturuldu=true; ilkTiklamaBekleniyor=false; bannerAcik=false;
+  clearInterval(alarmTimer); alarmTimer=null;
   document.getElementById('alarm-banner').classList.remove('open');
   document.getElementById('alarm-btn').classList.remove('ringing');
 }
 
 function bellTikla() {
-  const liste = gecikmisList();
-  if (liste.length === 0) return;
-  const banner = document.getElementById('alarm-banner');
-  if (bannerAcik) {
-    banner.classList.remove('open'); bannerAcik = false;
-  } else {
-    susturuldu = false;
-    ilkTiklamaBekleniyor = false;
-    banner.classList.add('open'); bannerAcik = true;
-    calSes();
-    if (!alarmTimer) alarmTimer = setInterval(calSes, 4000);
+  const liste=gecikmisList(); if (!liste.length) return;
+  const banner=document.getElementById('alarm-banner');
+  if (bannerAcik) { banner.classList.remove('open'); bannerAcik=false; }
+  else {
+    susturuldu=false; ilkTiklamaBekleniyor=false;
+    banner.classList.add('open'); bannerAcik=true;
+    calSes(); if (!alarmTimer) alarmTimer=setInterval(calSes,4000);
     document.getElementById('alarm-btn').classList.add('ringing');
   }
 }
 
+/* ── SEKMELER ── */
+function sekmeAc(id, el) {
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  el.classList.add('active');
+  if (id==='abone') renderAbone();
+}
+
+/* ── TUTAR DÜZENLEME ── */
+function tutarDuzenle(id) {
+  tutarDuzenleId = id;
+  render();
+  setTimeout(()=>{ const el=document.getElementById('tutar-inp-'+id); if(el) { el.focus(); el.select(); } }, 50);
+}
+
+function tutarKaydet(id) {
+  const val = parseFloat(document.getElementById('tutar-inp-'+id).value);
+  if (!val || val <= 0) { alert('Geçerli bir tutar girin.'); return; }
+  const f = faturalar.find(x=>x.id===id);
+  if (f) { f.tutar = val; kaydet(); }
+  tutarDuzenleId = null; render();
+}
+
+function tutarIptal() { tutarDuzenleId = null; render(); }
+
+/* ── FATURA RENDER ── */
 function render() {
-  let goster = faturalar;
-  if (aktifFiltre !== 'hepsi') goster = faturalar.filter(f => durum(f) === aktifFiltre);
+  let goster = aktifFiltre === 'hepsi' ? faturalar : faturalar.filter(f=>durum(f)===aktifFiltre);
+  const tbody=document.getElementById('fatura-tbody'), empty=document.getElementById('empty-state');
 
-  const tbody = document.getElementById('fatura-tbody');
-  const empty = document.getElementById('empty-state');
-
-  if (goster.length === 0) {
-    tbody.innerHTML = ''; empty.style.display = 'block';
-  } else {
-    empty.style.display = 'none';
+  if (!goster.length) { tbody.innerHTML=''; empty.style.display='block'; }
+  else {
+    empty.style.display='none';
     tbody.innerHTML = goster.map(f => {
-      const d = durum(f);
-      const tarStr = new Date(f.tarih).toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'});
-      const bellBtn = d === 'gecikti'
-        ? `<button class="btn-alarm-row ${susturuldu ? '' : 'shake'}" onclick="rowAlarmSus(event)" title="Alarmı sustur">🔔</button>`
-        : '';
+      const d=durum(f);
+      const tarStr=new Date(f.tarih).toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'});
+      const aboneHtml = aboneDuzenleId2 === f.id
+        ? `<div style="display:flex;align-items:center;gap:4px">
+            <input id="abone-inp-${f.id}" type="text" value="${f.aboneNo||''}" placeholder="Abone no" style="width:110px;font-size:12px;padding:4px 7px;font-family:monospace" onkeydown="if(event.key==='Enter')aboneNoKaydet(${f.id});if(event.key==='Escape')aboneNoIptal();" />
+            <button class="btn-tutar-kaydet" onclick="aboneNoKaydet(${f.id})">✓</button>
+            <button class="btn-tutar-iptal" onclick="aboneNoIptal()">✕</button>
+           </div>`
+        : `<span style="font-size:12px;font-family:monospace;color:var(--text-muted);cursor:pointer;border-bottom:1px dashed var(--border)" onclick="aboneNoDuzenle(${f.id})" title="Abone numarasını düzenle">${f.aboneNo||'—'}</span>`;
+      const tutarHtml = tutarDuzenleId === f.id
+        ? `<div class="tutar-edit-wrap">
+            <input class="tutar-input" id="tutar-inp-${f.id}" type="number" value="${f.tutar}" min="0" step="0.01" onkeydown="if(event.key==='Enter')tutarKaydet(${f.id});if(event.key==='Escape')tutarIptal();" />
+            <button class="btn-tutar-kaydet" onclick="tutarKaydet(${f.id})">✓</button>
+            <button class="btn-tutar-iptal" onclick="tutarIptal()">✕</button>
+           </div>`
+        : `<span class="tutar-cell" style="cursor:default;border-bottom:none">${fmt(f.tutar)}</span>
+           <button class="btn-duzenle" onclick="tutarDuzenle(${f.id})" title="Tutarı güncelle">✏️</button>`;
       return `<tr class="fatura-row ${f.odendi?'odendi-row':''} ${d==='gecikti'?'gecikti-row':''}">
         <td><div class="cell-check">
           <div class="check-wrap ${f.odendi?'checked':''}" onclick="toggle(${f.id})"></div>
           <div><div class="fatura-ad">${f.ad}</div></div>
         </div></td>
         <td><span style="font-size:13px;color:var(--text-muted)">${f.kategori}</span></td>
+        <td>${aboneHtml}</td>
         <td><span style="font-size:13px">${tarStr}</span></td>
         <td><span class="badge ${d}">${durumLabel(d)}</span></td>
-        <td><div class="actions">
-          <span class="tutar-cell">${fmt(f.tutar)}</span>
-          ${bellBtn}
-          <button class="btn-sil" onclick="sil(${f.id})">×</button>
-        </div></td>
+        <td><div class="actions">${tutarHtml}${d==='gecikti'?`<button class="btn-alarm-row ${susturuldu?'':'shake'}" onclick="rowAlarmSus(event)" title="Alarmı sustur">🔔</button>`:''}<button class="btn-sil" onclick="sil(${f.id})">×</button></div></td>
       </tr>`;
     }).join('');
   }
 
-  const toplam = faturalar.reduce((s,f)=>s+f.tutar,0);
-  const oList  = faturalar.filter(f=>f.odendi);
-  const oTut   = oList.reduce((s,f)=>s+f.tutar,0);
-  const bList  = faturalar.filter(f=>durum(f)==='bekliyor');
-  const bTut   = bList.reduce((s,f)=>s+f.tutar,0);
-  const gList  = gecikmisList();
-  const gTut   = gList.reduce((s,f)=>s+f.tutar,0);
-  const pct    = toplam>0 ? Math.round(oTut/toplam*100) : 0;
+  const toplam=faturalar.reduce((s,f)=>s+f.tutar,0);
+  const oTut=faturalar.filter(f=>f.odendi).reduce((s,f)=>s+f.tutar,0);
+  const bList=faturalar.filter(f=>durum(f)==='bekliyor');
+  const bTut=bList.reduce((s,f)=>s+f.tutar,0);
+  const gList=gecikmisList();
+  const gTut=gList.reduce((s,f)=>s+f.tutar,0);
+  const pct=toplam>0?Math.round(oTut/toplam*100):0;
 
-  document.getElementById('stat-toplam').textContent = fmt(toplam);
-  document.getElementById('stat-adet').textContent   = faturalar.length+' fatura';
-  document.getElementById('stat-odendi').textContent = fmt(oTut);
-  document.getElementById('stat-bekliyor').textContent = fmt(bTut);
-  document.getElementById('stat-bek-adet').textContent = bList.length+' fatura';
-  document.getElementById('stat-gecikti').textContent  = fmt(gTut);
-  document.getElementById('stat-gec-adet').textContent = gList.length+' fatura';
-  document.getElementById('progress-fill').style.width = pct+'%';
-  document.getElementById('progress-label').textContent = '%'+pct+' tamamlandı';
-
+  document.getElementById('stat-toplam').textContent=fmt(toplam);
+  document.getElementById('stat-adet').textContent=faturalar.length+' fatura';
+  document.getElementById('stat-odendi').textContent=fmt(oTut);
+  document.getElementById('stat-bekliyor').textContent=fmt(bTut);
+  document.getElementById('stat-bek-adet').textContent=bList.length+' fatura';
+  document.getElementById('stat-gecikti').textContent=fmt(gTut);
+  document.getElementById('stat-gec-adet').textContent=gList.length+' fatura';
+  document.getElementById('progress-fill').style.width=pct+'%';
+  document.getElementById('progress-label').textContent='%'+pct+' tamamlandı';
   alarmGuncelle();
 }
 
 function rowAlarmSus(e) { e.stopPropagation(); alarmSustur(); }
-
-function toggle(id) {
-  const f = faturalar.find(x=>x.id===id);
-  if (f) { f.odendi = !f.odendi; kaydet(); render(); }
-}
-function sil(id) {
-  if (!confirm('Bu fatura silinsin mi?')) return;
-  faturalar = faturalar.filter(x=>x.id!==id); kaydet(); render();
-}
+function toggle(id) { const f=faturalar.find(x=>x.id===id); if(f){f.odendi=!f.odendi;kaydet();render();} }
+function sil(id) { if(!confirm('Bu fatura silinsin mi?'))return; faturalar=faturalar.filter(x=>x.id!==id);kaydet();render(); }
 function faturaEkle() {
-  const ad = document.getElementById('inp-ad').value.trim();
-  const kat = document.getElementById('inp-kategori').value;
-  const tut = parseFloat(document.getElementById('inp-tutar').value);
-  const tar = document.getElementById('inp-tarih').value;
-  if (!ad||!tut||tut<=0||!tar) { alert('Lütfen tüm alanları doldurun.'); return; }
-  faturalar.push({id:nextId++,ad,kategori:kat,tutar:tut,tarih:tar,odendi:false});
-  document.getElementById('inp-ad').value = '';
-  document.getElementById('inp-tutar').value = '';
-  kaydet(); render();
+  const ad=document.getElementById('inp-ad').value.trim();
+  const kat=document.getElementById('inp-kategori').value;
+  const aboneNo=document.getElementById('inp-abone-no').value.trim();
+  const tut=parseFloat(document.getElementById('inp-tutar').value);
+  const tar=document.getElementById('inp-tarih').value;
+  if(!ad||!tut||tut<=0||!tar){alert('Lütfen zorunlu alanları doldurun.');return;}
+  faturalar.push({id:nextId++,ad,kategori:kat,aboneNo,tutar:tut,tarih:tar,odendi:false});
+  document.getElementById('inp-ad').value='';
+  document.getElementById('inp-abone-no').value='';
+  document.getElementById('inp-tutar').value='';
+  kaydet();render();
 }
-function filtrele(f, el) {
-  aktifFiltre = f;
+function filtrele(f,el) {
+  aktifFiltre=f;
   document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active'); render();
+  el.classList.add('active');render();
+}
+
+/* ── ABONE NUMARALARI ── */
+function aboneEkle() {
+  const sirket=document.getElementById('ab-sirket').value.trim();
+  const no=document.getElementById('ab-no').value.trim();
+  if(!sirket||!no){alert('Şirket adı ve abone numarası zorunludur.');return;}
+  const obj = {
+    id: aboneDuzenleId ?? aboneNextId++,
+    sirket, kat: document.getElementById('ab-kat').value,
+    no, musteri: document.getElementById('ab-musteri').value.trim(),
+    sayac: document.getElementById('ab-sayac').value.trim(),
+    tel: document.getElementById('ab-tel').value.trim(),
+    not: document.getElementById('ab-not').value.trim()
+  };
+  if (aboneDuzenleId) {
+    const idx=aboneler.findIndex(a=>a.id===aboneDuzenleId);
+    if(idx!==-1) aboneler[idx]=obj;
+    aboneDuzenleId=null;
+  } else { aboneler.push(obj); }
+  aboneKaydet(); aboneFormTemizle(); renderAbone();
+}
+
+function aboneDuzenle(id) {
+  const a=aboneler.find(x=>x.id===id); if(!a)return;
+  aboneDuzenleId=id;
+  document.getElementById('ab-sirket').value=a.sirket;
+  document.getElementById('ab-kat').value=a.kat;
+  document.getElementById('ab-no').value=a.no;
+  document.getElementById('ab-musteri').value=a.musteri||'';
+  document.getElementById('ab-sayac').value=a.sayac||'';
+  document.getElementById('ab-tel').value=a.tel||'';
+  document.getElementById('ab-not').value=a.not||'';
+  document.getElementById('abone-form-baslik').textContent='Abone Numarasını Düzenle';
+  document.getElementById('ab-iptal-btn').style.display='inline-block';
+  document.getElementById('ab-sirket').focus();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function aboneSil(id) {
+  if(!confirm('Bu abone numarası silinsin mi?'))return;
+  aboneler=aboneler.filter(a=>a.id!==id);
+  aboneKaydet(); renderAbone();
+}
+
+function aboneIptal() { aboneDuzenleId=null; aboneFormTemizle(); }
+
+function aboneFormTemizle() {
+  ['ab-sirket','ab-no','ab-musteri','ab-sayac','ab-tel','ab-not'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ab-kat').value='Elektrik';
+  document.getElementById('abone-form-baslik').textContent='Yeni Abone Numarası Ekle';
+  document.getElementById('ab-iptal-btn').style.display='none';
+}
+
+const katIkon = {Elektrik:'⚡',Doğalgaz:'🔥',Su:'💧',İnternet:'🌐',Telefon:'📱',Sigorta:'🛡️',Diğer:'📋'};
+
+function renderAbone() {
+  const grid=document.getElementById('abone-grid'), empty=document.getElementById('abone-empty');
+  if(!aboneler.length){grid.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  grid.innerHTML=aboneler.map(a=>`
+    <div class="abone-card">
+      <div class="abone-actions">
+        <button class="btn-abone-duzenle" onclick="aboneDuzenle(${a.id})" title="Düzenle">✏️</button>
+        <button class="btn-abone-sil" onclick="aboneSil(${a.id})" title="Sil">×</button>
+      </div>
+      <div class="abone-kat">${katIkon[a.kat]||'📋'} ${a.kat}</div>
+      <div class="abone-sirket">${a.sirket}</div>
+      <div class="abone-row"><span class="abone-key">Abone No</span><span class="abone-val">${a.no}</span></div>
+      ${a.musteri?`<div class="abone-row"><span class="abone-key">Müşteri No</span><span class="abone-val">${a.musteri}</span></div>`:''}
+      ${a.sayac?`<div class="abone-row"><span class="abone-key">Sayaç No</span><span class="abone-val">${a.sayac}</span></div>`:''}
+      ${a.tel?`<div class="abone-row"><span class="abone-key">Destek</span><span class="abone-val">${a.tel}</span></div>`:''}
+      ${a.not?`<div class="abone-not">${a.not}</div>`:''}
+    </div>`).join('');
 }
 
 render();
